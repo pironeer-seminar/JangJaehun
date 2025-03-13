@@ -1,8 +1,8 @@
 package pironeer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import pironeer.util.Reader;
 import pironeer.util.Timer;
 
@@ -39,7 +39,8 @@ public class DetectiveGame {
 
         // 4. Reader 클래스를 사용하여 탐정의 이름을 입력받고 1.5초 정지
         Reader reader = new Reader(); // Reader 클래스 사용
-        detectiveName = reader.nextLine(); // reader를 이용해 형사의 이름을 받음
+        System.out.println("\n탐정님의 이름을 알려주세요: ");
+        detectiveName = reader.nextLine().trim(); // reader를 이용해 탐정의 이름을 받음, trim()을 사용해 앞뒤 공백 제거
         System.out.println("탐정: " + detectiveName); // 탐정의 이름 출력
         Timer timer = new Timer(); // Timer 클래스 사용
         timer.sleep(1500); // 1500 ms 만큼 스레드 정지
@@ -52,6 +53,8 @@ public class DetectiveGame {
 
         murderer = characters.get(random.nextInt(characters.size())); // 범인 랜덤으로 지정
 
+        System.out.println("범인: " + murderer.getName()); // 디버깅에 필요
+
         List<String> dyingMessageType = List.of(
                 "hair",
                 "clothes",
@@ -59,6 +62,18 @@ public class DetectiveGame {
         );
 
         // 6. 랜덤하게 속성 값을 선택하고 다잉메시지 출력
+        int randomDyingMessageTypeIndex = random.nextInt(dyingMessageType.size()); // 0 ~ (dyingMessageType - 1) 사이의 난수
+        randomDyingMessageTypeIndex += 1; // characters의 각각의 요소의 타입에 맞는 index로 변환
+        // -> index 뽑았으니 바로 범인의 특징 뽑기
+        if (randomDyingMessageTypeIndex == 1) {
+            dyingMessage = "범인의 머리는 " + murderer.getHair();
+        }
+        else if (randomDyingMessageTypeIndex == 2) {
+            dyingMessage = "범인의 인상착의는 " + murderer.getClothes();
+        }
+        else {
+            dyingMessage = "범인의 신발은 " + murderer.getShoes();
+        }
 
         System.out.println("########################################");
         System.out.println("#######        평화로운 해커톤              ");
@@ -97,7 +112,15 @@ public class DetectiveGame {
         timer.sleep(1000);
 
         // 7. 용의자 총 인원수 출력
-        System.out.println("\n문제의 노트북 주위에 있는 사람은 " + {7번} + "명입니다.");
+        // System.out.println("\n문제의 노트북 주위에 있는 사람은 " + {7번} + "명입니다.");
+        // characters의 수 출력 -> Stream API 사용?
+        List<String> names = Optional.ofNullable(characters) // Optional 사용
+                        .orElse(Collections.emptyList())
+                        .stream()
+                        .map(Character::getName)
+                        .collect(Collectors.toList()); // Stream API 사용
+
+        System.out.println("\n문제의 노트북 주위에 있는 사람은 " + names.size() + "명입니다.");
         timer.sleep(1000);
 
         System.out.println("그중, 범인은 바로 이 자리에 있을 것입니다...");
@@ -118,9 +141,16 @@ public class DetectiveGame {
         }
 
         System.out.println("\n누구를 조사하시겠습니까? 이름을 입력하세요: ");
-        String choiceName = reader.nextLine().trim();
+        String choiceName = reader.nextLine().trim(); // 문자열을 입력 받고 앞뒤 공백을 제거, trim() 메소드는 앞뒤 공백을 제거한 문자열의 복사본을 리턴
 
         // 8. 사용자가 입력한 이름을 가진 용의자 조사
+        // choiceName: 사용자가 입력한 용의자 => Stream API를 사용해 필터를 걸어 해당 용의자 정보 출력
+        // character의 0번 index의 값과 choiceName이 동일한지 비교
+        suspect = characters.stream()
+                .filter(character -> character.getName().equals(choiceName)) // player가 입력한 용의자의 이름과 동일한 인물 filtering
+                        .findFirst() // 이름이 동일한 character(객체)가 있다면 첫 번째 결과 가져옴!
+                                .orElse(null); // 동일한 이름이 없을 시 null 반환
+
 
         System.out.println("잘못된 입력입니다! 시간이 얼마 남지 않았습니다, 다시 시도해주세요!");
         System.out.println("범인은 아직도 우리 곁에 있어요. 서둘러 진실을 밝혀내야 합니다!");
@@ -153,6 +183,21 @@ public class DetectiveGame {
         System.out.println("\n범인을 지목할 시간입니다.");
 
         // 10. charaters 각 항목을 인덱스와 함께 출력
+//        for (int i = 0; i < characters.size(); i++){
+//            System.out.println(i + ". " + characters.get(i).getName() + characters.get(i).getHair() + characters.get(i).getClothes() + characters.get(i).getShoes() + "\n");
+//        }
+
+        // 위 코드 개선 버전
+        for (int i = 0; i < characters.size(); i++){
+            Character character = characters.get(i); // 위의 코드에서 반복되는 get(i)를 해결
+            System.out.println(
+                    i + ". "
+                    + character.getName() + " "
+                    + character.getHair() + " "
+                    + character.getClothes() + " "
+                    + character.getShoes() + "\n");
+        }
+
 
         System.out.println("\n누구를 범인으로 지목하시겠습니까? 이름을 입력하세요: ");
         String choiceName = reader.nextLine().trim();
