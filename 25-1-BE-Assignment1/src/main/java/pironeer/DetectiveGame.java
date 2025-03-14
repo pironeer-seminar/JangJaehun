@@ -62,17 +62,45 @@ public class DetectiveGame {
         );
 
         // 6. 랜덤하게 속성 값을 선택하고 다잉메시지 출력
-        int randomDyingMessageTypeIndex = random.nextInt(dyingMessageType.size()); // 0 ~ (dyingMessageType - 1) 사이의 난수
-        randomDyingMessageTypeIndex += 1; // characters의 각각의 요소의 타입에 맞는 index로 변환
-        // -> index 뽑았으니 바로 범인의 특징 뽑기
-        if (randomDyingMessageTypeIndex == 1) {
-            dyingMessage = "머리스타일은 " + murderer.getHair() + " 윽..☠";
+//        int randomDyingMessageTypeIndex = random.nextInt(dyingMessageType.size()); // 0 ~ (dyingMessageType - 1) 사이의 난수
+//        randomDyingMessageTypeIndex += 1; // characters의 각각의 요소의 타입에 맞는 index로 변환
+//        // -> index 뽑았으니 바로 범인의 특징 뽑기
+//        if (randomDyingMessageTypeIndex == 1) {
+//            dyingMessage = "머리스타일은 " + murderer.getHair() + " 윽..☠";
+//        }
+//        else if (randomDyingMessageTypeIndex == 2) {
+//            dyingMessage = "옷은 " + murderer.getClothes() + " 윽..☠";
+//        }
+//        else {
+//            dyingMessage = "신발은 " + murderer.getShoes() + " 윽..☠";
+//        }
+
+        // Enum 사용 및 switch case 사용
+        enum DyingMessageType {
+            HAIR,
+            CLOTHES,
+            SHOES,
         }
-        else if (randomDyingMessageTypeIndex == 2) {
-            dyingMessage = "옷은 " + murderer.getClothes() + " 윽..☠";
-        }
-        else {
-            dyingMessage = "신발은 " + murderer.getShoes() + " 윽..☠";
+
+        DyingMessageType type = DyingMessageType.values()[
+                random.nextInt(DyingMessageType.values().length)
+        ];
+
+        switch (type) {
+            case HAIR:
+                dyingMessage = "머리스타일은 " + murderer.getHair() + " 윽..☠";
+                break;
+
+            case CLOTHES:
+                dyingMessage = "옷은 " + murderer.getClothes() + " 윽..☠";
+                break;
+
+            case SHOES:
+                dyingMessage = "신발은 " + murderer.getShoes() + " 윽..☠";
+                break;
+
+            default:
+                dyingMessage = null;
         }
 
         System.out.println("########################################");
