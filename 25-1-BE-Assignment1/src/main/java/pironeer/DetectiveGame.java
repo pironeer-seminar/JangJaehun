@@ -33,35 +33,26 @@ public class DetectiveGame {
         lives = 2;
     }
 
-    public void showIntro() {
-        System.out.println("탐정 게임에 오신 것을 환영합니다.");
-        timer.sleep(1000);
-
-        // 4. Reader 클래스를 사용하여 탐정의 이름을 입력받고 1.5초 정지
+    // 4. Reader 클래스를 사용하여 탐정의 이름을 입력받고 1.5초 정지
+    private void inputDetectiveName() {
         Reader reader = new Reader(); // Reader 클래스 사용
         System.out.println("\n탐정님의 이름을 알려주세요: ");
         detectiveName = reader.nextLine().trim(); // reader를 이용해 탐정의 이름을 받음, trim()을 사용해 앞뒤 공백 제거
         System.out.println("탐정: " + detectiveName); // 탐정의 이름 출력
         Timer timer = new Timer(); // Timer 클래스 사용
         timer.sleep(1500); // 1500 ms 만큼 스레드 정지
+    }
 
-        // 5. 캐릭터 중 한 명을 희생자로 지정하고, 목록에서 제거
+    // 5. 캐릭터 중 한 명을 희생자로 지정하고, 목록에서 제거
+    private void selectVictim() {
         int randomNum = random.nextInt(characters.size()); // 0 ~ (캐릭터의 수 - 1) 사이의 난수
         victim = characters.get(randomNum); // 피해자 랜덤으로 지정
 
         characters.remove(randomNum); // 피해자를 character에서 제거
+    }
 
-        murderer = characters.get(random.nextInt(characters.size())); // 범인 랜덤으로 지정
-
-        System.out.println("범인: " + murderer.getName()); // 디버깅에 필요
-
-        List<String> dyingMessageType = List.of(
-                "hair",
-                "clothes",
-                "shoes"
-        );
-
-        // 6. 랜덤하게 속성 값을 선택하고 다잉메시지 출력
+    // 6. 랜덤하게 속성 값을 선택하고 다잉메시지 출력
+    private void selectDyingMessage() {
 //        int randomDyingMessageTypeIndex = random.nextInt(dyingMessageType.size()); // 0 ~ (dyingMessageType - 1) 사이의 난수
 //        randomDyingMessageTypeIndex += 1; // characters의 각각의 요소의 타입에 맞는 index로 변환
 //        // -> index 뽑았으니 바로 범인의 특징 뽑기
@@ -84,7 +75,7 @@ public class DetectiveGame {
 
         DyingMessageType type = DyingMessageType.values()[
                 random.nextInt(DyingMessageType.values().length)
-        ];
+                ];
 
         switch (type) {
             case HAIR:
@@ -102,6 +93,18 @@ public class DetectiveGame {
             default:
                 dyingMessage = null;
         }
+    }
+
+    public void showIntro() {
+        System.out.println("탐정 게임에 오신 것을 환영합니다.");
+        timer.sleep(1000);
+        inputDetectiveName(); // 4번
+
+        selectVictim(); // 5번
+
+        murderer = characters.get(random.nextInt(characters.size())); // 범인 랜덤으로 지정
+
+        selectDyingMessage(); // 6번
 
         System.out.println("########################################");
         System.out.println("#######        평화로운 해커톤              ");
