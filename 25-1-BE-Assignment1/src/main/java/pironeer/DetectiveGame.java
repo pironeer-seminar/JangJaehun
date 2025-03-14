@@ -66,13 +66,13 @@ public class DetectiveGame {
         randomDyingMessageTypeIndex += 1; // characters의 각각의 요소의 타입에 맞는 index로 변환
         // -> index 뽑았으니 바로 범인의 특징 뽑기
         if (randomDyingMessageTypeIndex == 1) {
-            dyingMessage = "범인의 머리는 " + murderer.getHair();
+            dyingMessage = "머리스타일은 " + murderer.getHair() + " 윽..☠";
         }
         else if (randomDyingMessageTypeIndex == 2) {
-            dyingMessage = "범인의 인상착의는 " + murderer.getClothes();
+            dyingMessage = "옷은 " + murderer.getClothes() + " 윽..☠";
         }
         else {
-            dyingMessage = "범인의 신발은 " + murderer.getShoes();
+            dyingMessage = "신발은 " + murderer.getShoes() + " 윽..☠";
         }
 
         System.out.println("########################################");
@@ -151,18 +151,25 @@ public class DetectiveGame {
                         .findFirst() // 이름이 동일한 character(객체)가 있다면 첫 번째 결과 가져옴!
                                 .orElse(null); // 동일한 이름이 없을 시 null 반환
 
+        if (suspect != null) {
+            System.out.println("용의자: " + suspect.getName() + "의 인상착의");
+            System.out.println("    상의: " + suspect.getHair());
+            System.out.println("    하의: " + suspect.getClothes());
+            System.out.println("    신발: " + suspect.getShoes());
+            return;
+        }
 
         System.out.println("잘못된 입력입니다! 시간이 얼마 남지 않았습니다, 다시 시도해주세요!");
         System.out.println("범인은 아직도 우리 곁에 있어요. 서둘러 진실을 밝혀내야 합니다!");
         System.out.println(detectiveName + ": 좋아, 이번엔 잘 선택해보자.");
 
-        investigate();
+        investigate(); // 재귀호출
     }
 
     public boolean matchDyingMessage(Character character) {
-        if (dyingMessage.equals("머리스타일은 " + murderer.getHair() + "윽..☠") ||
-                dyingMessage.equals("옷은 " + murderer.getClothes() + "윽..☠") ||
-                dyingMessage.equals("신발은 " + murderer.getShoes() + "윽..☠")) {
+        if (dyingMessage.equals("머리스타일은 " + character.getHair() + " 윽..☠") || // murderer -> character로 수정
+                dyingMessage.equals("옷은 " + character.getClothes() + " 윽..☠") ||
+                dyingMessage.equals("신발은 " + character.getShoes() + " 윽..☠")) {
             return true;
         }
         return false;
@@ -188,16 +195,10 @@ public class DetectiveGame {
 //        }
 
         // 위 코드 개선 버전
-        for (int i = 0; i < characters.size(); i++){
-            Character character = characters.get(i); // 위의 코드에서 반복되는 get(i)를 해결
-            System.out.println(
-                    i + ". "
-                    + character.getName() + " "
-                    + character.getHair() + " "
-                    + character.getClothes() + " "
-                    + character.getShoes() + "\n");
+        for (int i = 1; i <= characters.size(); i++){
+            Character character = characters.get(i - 1); // 위의 코드에서 반복되는 get(i)를 해결
+            System.out.println(i + ". " + character.getName());
         }
-
 
         System.out.println("\n누구를 범인으로 지목하시겠습니까? 이름을 입력하세요: ");
         String choiceName = reader.nextLine().trim();
@@ -259,7 +260,7 @@ public class DetectiveGame {
                 timer.sleep(1000);
                 String choice = promptChoice("용의자들의 인상착의를 다시 보겠습니까? (네/아니오): ");
                 if (choice.equals("네")) {
-                    System.out.println(detectiveName + ": 좋았어... 다시 차근차근 보자\\n");
+                    System.out.println(detectiveName + ": 좋았어... 다시 차근차근 보자\n");
                     timer.sleep(1000);
                     mainFlow();
                 } else {
