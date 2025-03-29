@@ -4,7 +4,6 @@ import com.example.pironeer.domain.Order;
 import com.example.pironeer.domain.OrderItem;
 import com.example.pironeer.domain.Product;
 import com.example.pironeer.domain.User;
-import com.example.pironeer.dto.order.RequestOrderDto;
 import com.example.pironeer.repository.OrderRepository;
 import com.example.pironeer.repository.ProductRepository;
 import com.example.pironeer.repository.UserRepository;
@@ -26,8 +25,9 @@ public class OrderService {
         this.productRepository = productRepository;
     }
 
+    // 주문 생성
     @Transactional
-    public void createOrder(Long userId, OrderRequestItem orderRequestItem) {
+    public Long createOrder(Long userId, OrderRequestItem orderRequestItem) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
@@ -43,15 +43,35 @@ public class OrderService {
         OrderItem orderItem = new OrderItem(product, (long) orderRequestItem.amount(), totalPrice);
 
         // 주문 생성
-        Order order = new Order(user, "ORDERD", orderRequestItem.amount());
+        Order order = new Order(user, "ORDERED", orderRequestItem.amount());
 
         order.addOrderItem(orderItem);
 
         orderRepository.save(order);
+
+        return order.getId();
     }
 
+    // userId로 주문 목록 전체 검색
     public List<Order> getOrdersByUserId(Long userId) {
         Optional<User> findUserId = userRepository.findById(userId);
         return findUserId.get().getOrders();
+    }
+
+    // 주문 삭제
+    @Transactional
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalStateException("일치하는 주문이 없습니다"));
+
+        if ("CANCELED".equals(order.getStatus())) {
+            throw new IllegalStateException("취소된 주문입니다.");
+        }
+
+        order.getOrderItems()
+                .forEach(orderItem -> orderItem.getProduct().addAmount(orderItem.getQuantity().intValue()));
+
+        order.setStatus("CANCELED");
+
     }
 }
