@@ -2,10 +2,12 @@ package com.example.pironeer.service;
 
 import com.example.pironeer.dto.request.PostCreateReq;
 import com.example.pironeer.dto.request.PostUpdateReq;
+import com.example.pironeer.dto.response.CommentSearchRes;
 import com.example.pironeer.dto.response.PostSearchRes;
 import com.example.pironeer.entity.Post;
 import com.example.pironeer.entity.PostStatus;
 import com.example.pironeer.entity.User;
+import com.example.pironeer.repository.CommentRepository;
 import com.example.pironeer.repository.PostRepository;
 import com.example.pironeer.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -21,6 +23,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository; // 요청 값으로 userId 값을 받아왔기에 이 값으로 DB에서 조회를 해야함
+    private final CommentRepository commentRepository;
 
     public Long create(PostCreateReq req) {
         User user = userRepository.findById(req.getUserId())
@@ -39,7 +42,15 @@ public class PostService {
         // Stream API를 사용해 PostSearchRes라는 응답 DTO로 변환
         return posts.stream()
                 // map을 이용해 Post를 PostSearchRes로 변환!
-                .map(post -> new PostSearchRes(post.getUser().getId(), post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt()))
+                .map(post -> new PostSearchRes(
+                        post.getUser().getId(),
+                        post.getId(),
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getCreatedAt(),
+                        post.getComments().stream()
+                                .map(comment -> new CommentSearchRes(comment.getUser().getId(), comment.getContent()))
+                                .toList()))
                 .toList();
     }
 
@@ -47,7 +58,16 @@ public class PostService {
         // 게시글 레포지토리(DB)에서 조회
         Post post = postRepository.findById(postId) // 이렇게까지 하면 Optional로 반환되기에 예외처리 필요
                 .orElseThrow(() -> new IllegalArgumentException("조회된 게시글이 없습니다."));
-        return new PostSearchRes(post.getUser().getId(), post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt());
+        return new PostSearchRes(
+                post.getUser().getId(),
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getCreatedAt(),
+                post.getComments().stream()
+                        .map(comment -> new CommentSearchRes(comment.getUser().getId(), comment.getContent()))
+                        .toList()
+        );
 
     }
 
@@ -75,7 +95,16 @@ public class PostService {
         List<Post> posts = postRepository.findAllByUserId(user.getId());
 
         return posts.stream()
-                .map(post -> new PostSearchRes(userId, post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt()))
+                .map(post -> new PostSearchRes(
+                        userId,
+                        post.getId(),
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getCreatedAt(),
+                        post.getComments().stream()
+                                .map(comment -> new CommentSearchRes(userId, comment.getContent()))
+                                .toList()
+                ))
                 .toList();
     }
 }

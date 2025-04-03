@@ -22,7 +22,7 @@ public class User {
     @Column(nullable = false, length = 50) // null 값일 수 없고 글자수를 50자로 제한
     private String name;
 
-    // 비즈니스 로직(Serviec)에서 객체를 생성하는 생성 로직이 들어가는 것은 코드가 지저분해질 수 있기에 정적 팩터리 메서드를 생성
+    // 비즈니스 로직(Service)에서 객체를 생성하는 생성 로직이 들어가는 것은 코드가 지저분해질 수 있기에 정적 팩터리 메서드를 생성
     public static User create(String name) {
         return User.builder()
                 .name(name)

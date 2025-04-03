@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -15,5 +16,6 @@ public class PostSearchRes {
     private String title;
     private String content;
     private LocalDateTime createdAt;
+    private List<CommentSearchRes> comments; // comment를 DTO 형태로 저장
 
 }

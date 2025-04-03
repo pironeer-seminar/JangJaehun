@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,6 +34,10 @@ public class Post {
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
+
+    // 댓글을 함께 조회할 수 있도록 OneToMany 관계로 작성
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
 
     // builder를 이용해 create 메서드 생성
     public static Post create(User author, String title, String content, PostStatus status) {
