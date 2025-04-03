@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pironeer
+    driver-class-name: org.postgresql.Driver # build.gradle에서 가지고 온 PostgreSQL을 참조
+    username: postgres
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create # 서버를 재실행할 때마다 DB의 테이블 내용을 지우고 새롭게 시작하도록 함
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true # show-sql과 함께 실행될 때 보이는 로그들을 보기 좋게 바꿔줌
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
