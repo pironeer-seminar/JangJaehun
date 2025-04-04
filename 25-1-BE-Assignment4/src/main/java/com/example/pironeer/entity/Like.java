@@ -1,13 +1,12 @@
 package com.example.pironeer.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
+@Table(name = "post_likes") // 기존 like라는 예약어가 있기에 명시적으로 table명 선언
 @Getter
+@Builder // builder를 이용해 엔티티 생성
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Like {
@@ -24,4 +23,13 @@ public class Like {
     private Post post;
 
     private boolean liked;
+
+    // like 객체를 생성하는 메서드 (builder 이용)
+    public static Like create(User user, Post post, boolean liked) {
+        return Like.builder()
+                .user(user)
+                .post(post)
+                .liked(liked)
+                .build();
+    }
 }

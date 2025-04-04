@@ -25,7 +25,7 @@ public class Comment {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    public static Comment create(User user, Post post, String content) { // 왜 static으로 선언하는가?
+    public static Comment create(User user, Post post, String content) { // 왜 static으로 선언하는가? 정적 팩터리 메서드?
 
         return Comment.builder()
                 .user(user)
