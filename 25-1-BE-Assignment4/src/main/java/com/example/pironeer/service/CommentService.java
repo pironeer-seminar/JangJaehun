@@ -20,7 +20,7 @@ public class CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public String create(CommentCreateReq req, Long postId, Long userId) {
+    public Long create(CommentCreateReq req, Long postId, Long userId) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("조회된 사용자가 없습니다."));
@@ -32,6 +32,21 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-        return comment.getContent();
+        return comment.getId();
+    }
+
+    public Long delete(Long commentId) {
+
+        if (commentRepository.existsById(commentId)) {
+
+            commentRepository.deleteById(commentId);
+
+            return commentId;
+        } else {
+
+            throw new IllegalArgumentException("조회된 댓글이 없습니다");
+
+        }
+
     }
 }

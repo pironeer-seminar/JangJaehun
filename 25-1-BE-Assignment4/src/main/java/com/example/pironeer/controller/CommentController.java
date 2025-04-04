@@ -13,11 +13,18 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{postId}/{userId}")
-    public String createComment(
+    public Long createComment(
             @PathVariable("postId") Long postId, // 2번째 게시물에 대해선 댓글이 달리지 않고 에러 발생
             @PathVariable("userId") Long userId,
             @RequestBody CommentCreateReq req) {
         return commentService.create(req, postId, userId);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public Long deleteComment(
+            @PathVariable("commentId") Long commentId
+    ) {
+        return commentService.delete(commentId);
     }
 
 }
