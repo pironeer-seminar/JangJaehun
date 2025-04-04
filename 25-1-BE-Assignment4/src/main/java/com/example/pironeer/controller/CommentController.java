@@ -15,7 +15,7 @@ public class CommentController {
     @PostMapping("/{postId}/{userId}")
     public String createComment(
             @PathVariable("postId") Long postId, // 2번째 게시물에 대해선 댓글이 달리지 않고 에러 발생
-            @PathVariable("postId") Long userId,
+            @PathVariable("userId") Long userId,
             @RequestBody CommentCreateReq req) {
         return commentService.create(req, postId, userId);
     }
