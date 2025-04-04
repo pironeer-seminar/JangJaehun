@@ -33,13 +33,13 @@ public class LikeService {
         // 모든 좋아요를 조회하고 일치하는 user와 post를 찾기보단 repository에 메서드를 생성
         List<Like> likes = likeRepository.findByUserIdAndPostId(user.getId(), post.getId());
 
-        if (!likes.isEmpty() && likes.get(0).isLiked()) { // 해당 요소가 비어있지 않고 liked 속성이 True라면
+        if (!likes.isEmpty()) { // 해당 요소가 비어있다면
 
             likeRepository.delete(likes.get(0));
 
             return false;
         } else {
-            Like like = Like.create(user, post, true);
+            Like like = Like.create(user, post);
 
             likeRepository.save(like); // 실제 DB에 저장
 

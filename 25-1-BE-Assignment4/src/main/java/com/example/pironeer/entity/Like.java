@@ -22,14 +22,11 @@ public class Like {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    private boolean liked;
-
     // like 객체를 생성하는 메서드 (builder 이용)
-    public static Like create(User user, Post post, boolean liked) {
+    public static Like create(User user, Post post) {
         return Like.builder()
                 .user(user)
                 .post(post)
-                .liked(liked)
                 .build();
     }
 }
