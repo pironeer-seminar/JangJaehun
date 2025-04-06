@@ -1,6 +1,7 @@
 package com.example.demo1.post.service;
 
 import com.example.demo1.common.exception.NotFoundException;
+import com.example.demo1.common.type.PostErrorType;
 import com.example.demo1.common.type.UserErrorType;
 import com.example.demo1.post.dto.request.PostCreateReq;
 import com.example.demo1.post.dto.request.PostUpdateReq;
@@ -27,7 +28,7 @@ public class PostService {
     public Long create(PostCreateReq req) {
         User user = userRepository.findById(req.getUserId())
 //                .orElseThrow(() -> new IllegalArgumentException("조회된 유저가 없습니다."));
-                    .orElseThrow(() -> new NotFoundException(UserErrorType.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(UserErrorType.NOT_FOUND));
         Post post = Post.create(user, req.getTitle(), req.getContent(), req.getStatus());
         post = postRepository.save(post);
 
@@ -47,15 +48,16 @@ public class PostService {
 
     public PostSearchRes detail(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("조회된 게시글이 없습니다."));
-
+//                .orElseThrow(() -> new IllegalArgumentException("조회된 게시글이 없습니다."));
+                .orElseThrow(() -> new NotFoundException(PostErrorType.NOT_FOUND));
         return new PostSearchRes(post.getUser().getId(), post.getId(), post.getTitle(), post.getContent(),
                 post.getCreatedAt());
     }
 
     public Long update(Long postId, PostUpdateReq req) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("조회된 게시글이 없습니다."));
+//                .orElseThrow(() -> new IllegalArgumentException("조회된 게시글이 없습니다."));
+                .orElseThrow(() -> new NotFoundException(PostErrorType.NOT_FOUND));
 
         post.update(req.getTitle(), req.getContent(), req.getStatus());
         postRepository.save(post);
