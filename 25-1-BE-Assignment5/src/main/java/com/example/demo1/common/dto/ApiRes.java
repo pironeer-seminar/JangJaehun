@@ -51,4 +51,5 @@ public record ApiRes<T>( // record : 데이터를 변경하지 않고 실어 나
                 null
         );
     }
+
 }

@@ -1,7 +1,8 @@
 package com.example.demo1.common.type;
 
 public enum CommonErrorType implements ErrorType{
-    INTERNAL_SERVER("COMMON_1", "알 수 없는 서버 에러가 발생했습니다");
+    INTERNAL_SERVER("COMMON_1", "알 수 없는 서버 에러가 발생했습니다"),
+    VALIDATION_ERROR("COMMON_2", "유효성 검사 에러가 발생했습니다");
 
     private String code;
     private String message;

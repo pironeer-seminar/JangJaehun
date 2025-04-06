@@ -5,6 +5,7 @@ import com.example.demo1.common.type.CommonErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -28,5 +29,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiRes<?>> handerBaseException(BaseException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(ApiRes.fail(ex), ex.getHttpStatus());
+    }
+
+    // ValidException을 처리하는 handler
+    @ExceptionHandler(MethodArgumentNotValidException.class) // 유효성 검사에 실패한 에러 처리
+    public ResponseEntity<ApiRes<?>> handerMethodArgumentNotValidException(
+            final MethodArgumentNotValidException ex
+    ) {
+        log.error(ex.getMessage()); // 디버깅을 위한 로그 찍기
+        return new ResponseEntity<>(
+                ApiRes.fail(
+                        CommonErrorType.VALIDATION_ERROR,
+                        HttpStatus.BAD_REQUEST,
+                        ex.getMessage()
+                ),
+                HttpStatus.BAD_REQUEST
+        );
     }
 }
