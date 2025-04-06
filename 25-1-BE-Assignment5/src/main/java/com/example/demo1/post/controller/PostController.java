@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ public class PostController {
 //        return postService.create(req);
 //    }
     public ApiRes<?> create(
+            @Valid // 유효성 검증 트리거 설정
             @RequestBody PostCreateReq req
     ) {
         postService.create(req);
@@ -79,6 +81,7 @@ public class PostController {
     public ApiRes<?> update(
             @Parameter(description = "게시글 ID", example = "1")
             @PathVariable("postId") Long postId,
+            @Valid // 유효성 검증 트리거 설정
             @RequestBody PostUpdateReq req
     ) {
         postService.update(postId, req); // 비즈니스 로직을 이용해 실제 값 update

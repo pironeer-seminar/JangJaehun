@@ -7,6 +7,7 @@ import com.example.demo1.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,10 @@ public class UserController {
 //    public Long create(@RequestBody UserCreateReq req) {
 //        return userService.create(req);
 //    }
-    public ApiRes<?> create(@RequestBody UserCreateReq userCreateReq) {
+    public ApiRes<?> create(
+            @Valid
+            @RequestBody UserCreateReq userCreateReq
+    ) {
 
         userService.create(userCreateReq); // 값을 DB에 저장
 
