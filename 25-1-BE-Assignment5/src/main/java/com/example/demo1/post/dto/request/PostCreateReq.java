@@ -24,7 +24,6 @@ public class PostCreateReq {
     @Schema(description = "게시글 내용", example = "Swagger에 대한 설명")
     private String content;
 
-    @Pattern(regexp = "PUBLIC/PRIVATE", message = "status는 PUBLIC 혹은 PRIVATE 여야 합니다.")
     @Schema(description = "공개 여부", example = "PUBLIC")
     private PostStatus status;
 }

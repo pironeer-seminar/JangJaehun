@@ -17,7 +17,6 @@ public class PostUpdateReq {
     @Schema(description = "수정한 내용", example = "게시글 내용 수정")
     private String content;
 
-    @Pattern(regexp = "PUBLIC/PRIVATE", message = "status는 PUBLIC 혹은 PRIVATE 여야 합니다.")
     @Schema(description = "공개 여부", example = "PRIVATE")
     private PostStatus status;
 }
